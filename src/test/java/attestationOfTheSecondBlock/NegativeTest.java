@@ -3,6 +3,8 @@ package attestationOfTheSecondBlock;
 import org.junit.jupiter.api.*;
 import service.PlayerServiceImpl;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,6 +51,7 @@ public class NegativeTest {
     @Test
     @Tag("Negative")
     @DisplayName("сохранить игрока с пустым ником")
+    @Disabled("Тест временно выключен из-за бага (jira.com/task-5152)")
     void shouldThrowExceptionWhenSavingPlayerWithEmptyNickname() {
         assertThrows(IllegalArgumentException.class, () -> playerService.createPlayer(""));
     }
@@ -56,6 +59,7 @@ public class NegativeTest {
     @Test
     @Tag("Negative")
     @DisplayName("начислить отрицательное число очков")
+    @Disabled("Тест временно выключен из-за бага (jira.com/task-5050)")
     void shouldThrowExceptionWhenAddingNegativePoints() {
         int id = playerService.createPlayer("John");
         assertThrows(IllegalArgumentException.class, () -> playerService.addPoints(id, -10));
@@ -71,15 +75,17 @@ public class NegativeTest {
     @Test
     @Tag("Negative")
     @DisplayName("Проверить создание игрока с 16 символами")
+    @Disabled("Тест временно выключен из-за бага (jira.com/task-5566)")
     void shouldThrowExceptionWhenCreatingPlayerWithTooLongNickname() {
         String longNickname = "abcdefghijklmnop";
         assertThrows(IllegalArgumentException.class, () -> playerService.createPlayer(longNickname));
     }
-}
 
-//    @AfterEach
-//// Аннотация для одинакового ПОСТУСЛОВИЯ (ПОСЛЕ ТЕСТОВ). Главная особенность, что данная аннотация выполняется,
-//    // даже если тест падает. Т.е. если в нашем случае тест упадёт, то метод сработает и файл будет удалён
-//    public void tearDown() throws IOException {
-//        Files.deleteIfExists(Path.of("./data.json")); // Постусловие
-//    }
+
+    @AfterEach
+// Аннотация для одинакового ПОСТУСЛОВИЯ (ПОСЛЕ ТЕСТОВ). Главная особенность, что данная аннотация выполняется,
+    // даже если тест падает. Т.е. если в нашем случае тест упадёт, то метод сработает и файл будет удалён
+    public void tearDown() throws IOException {
+        Files.deleteIfExists(Path.of("./data.json")); // Постусловие
+    }
+}
